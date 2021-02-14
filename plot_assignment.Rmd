@@ -80,24 +80,76 @@ with(dt, plot(DnT,Global_active_power,type = "l",
               xlab = ""))
 head(dt)
 # copy to file
-#dev.copy(png,"plot1.png")
-#dev.off()
+dev.copy(png,"plot2.png")
+dev.off()
 
 
 ```
 
 
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+Plot 3 
 
 ```{r}
-plot(cars)
+
+library(data.table)
+
+# read small Data set
+dt <-fread("workingData.csv")
+  
+
+# need to make it bigger..
+png("plot3.png", width = 600, height = 600)
+
+with(dt,plot(DnT,Sub_metering_1,type = "l",col = "black",xlab = "", ylab = "Energy sub metering"))
+with(dt,lines(DnT,Sub_metering_2, col = "red"))
+with(dt,lines(DnT,Sub_metering_3, col = "blue"))
+
+legend("topright", pch =1, col = c("black","red","blue"), legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+
+
+# copy to file
+#dev.copy(png,"plot3.png", width=10, height=10)
+dev.off()
+
+
+```
+```{r}
+
+library(data.table)
+
+# read small Data set
+dt <-fread("workingData.csv")
+png("plot4.png", width = 800, height = 800)
+par(mfrow = c(2,2), mar = c(4,4,2,1), oma = c(0,0,2,0))
+
+
+with(dt, {
+  
+  plot(DnT,Global_active_power,type = "l",
+              ylab = "Global Active power(kilowatts)",
+              xlab = "")
+  
+  plot(DnT,Voltage,type = "l",
+              ylab = "Voltage",
+              xlab = "datetime")
+  
+  
+  plot(DnT,Sub_metering_1,type = "l",col = "black",xlab = "", ylab = "Energy sub metering")
+  lines(DnT,Sub_metering_2, col = "red")
+  lines(DnT,Sub_metering_3, col = "blue")
+  legend("topright", pch =1, col = c("black","red","blue"), legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+  
+  
+  plot(DnT,Global_reactive_power,type = "l",
+              ylab = "Global_reactive_power",
+              xlab = "datetime")
+ 
+  #mtext("ozone and weahter", outer = T)
+  }
+  
+)
+
+dev.off()
+
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
