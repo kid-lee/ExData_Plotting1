@@ -4,28 +4,87 @@ output: html_notebook
 ---
 
 
+Subletting data
+
+
 ```{r}
+
+# Clean the data, change the data type from Char to Date, time, num 
+# save the subset to a sparate file for later procesing
 library(data.table)
 library(sqldf)
 
-sdate <- as.Date("01/02/2007")
-edate <- as.Date("02/02/2007")
+# define start date or end date
+sdate <- as.Date("01/02/2007",format ="%d/%m/%Y")
+edate <- as.Date("02/02/2007",format ="%d/%m/%Y")
 
-df=fread("household_power_consumption.txt")
-#, which(df$Date %between% c(sdate,edate))
+numnames = c("Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3")
 
-#dt <- subset(df, as.Date(df$Date,"%d/%m/%y") %between% c(sdate,edate))
-dt <- subset(df, as.Date(df$Date) == sdate | as.Date(df$Date) == edate)
+# read and subset the data with sdata, and edate
+df=fread("household_power_consumption.txt",na.strings="?")
 
+# change char to IDate and Itime type for later processing
+df<- df[, ("Date") := lapply(.SD, as.Date, format ="%d/%m/%Y"), .SDcols = "Date"]
+df<-df[, ("Time") := lapply(.SD, as.ITime), .SDcols = "Time"]
+
+#subsetting data, save the usefule bit
+dt <- subset(df, df$Date %between% c(sdate,edate))
+
+#set numnames to be numeric for later works 
+dt<- dt[, (numnames) := lapply(.SD, as.numeric), .SDcols = numnames]
+dt<-dt[complete.cases(dt),]
+# create a smaller text file to work on 
 fwrite(dt,"workingData.csv")
-head(dt)
-print(dt)
-tail(dt)
-str(dt)
 
 ```
 
 
+Plot 1 
+
+```{r}
+library(data.table)
+# read small Data set
+dt <-fread("workingData.csv")
+
+# plotting with hist 
+with(dt, hist(Global_active_power, 
+              main = "Global Active power",
+              col = "red",
+              xlab = "Global Active power(kilowatts)"))
+
+# copy to file
+dev.copy(png,"plot1.png")
+dev.off()
+
+```
+
+
+
+Plot 2
+
+```{r}
+library(data.table)
+
+# read small Data set
+dt <-fread("workingData.csv")
+
+dt[, ("Time") := lapply(.SD, as.ITime), .SDcols = "Time"]
+
+head(dt)
+
+dnt <- as.POSIXct(paste(dt$Date,dt$Time), format = "%Y-%m-%d %H:%M:%S")
+dt$DnT <- dnt
+# plotting with hist 
+with(dt, plot(DnT,Global_active_power,type = "l",
+              ylab = "Global Active power(kilowatts)",
+              xlab = ""))
+head(dt)
+# copy to file
+#dev.copy(png,"plot1.png")
+#dev.off()
+
+
+```
 
 
 
