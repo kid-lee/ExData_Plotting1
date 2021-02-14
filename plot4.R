@@ -1,5 +1,6 @@
-# Data has been cleaned by clean.R
-# See repo for what happened in the script :) 
+# I separated the cleaning function to a script called clean.R
+# Please check the root dir of the repo 
+# for what happened in the script :) 
 
 library(data.table)
 
