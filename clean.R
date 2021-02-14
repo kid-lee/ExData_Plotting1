@@ -23,5 +23,11 @@ dt <- subset(df, df$Date %between% c(sdate,edate))
 #set numnames to be numeric for later works 
 dt<- dt[, (numnames) := lapply(.SD, as.numeric), .SDcols = numnames]
 dt<-dt[complete.cases(dt),]
+
+
+# combine the Date and Time to a DatenTime variable, then add to the data table
+dnt <- as.POSIXct(paste(dt$Date,dt$Time), format = "%Y-%m-%d %H:%M:%S")
+dt$DnT <- dnt
+
 # create a smaller text file to work on 
 fwrite(dt,"workingData.csv")
