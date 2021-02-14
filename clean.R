@@ -1,10 +1,11 @@
 
 # Clean the data, change the data type from Char to Date, time, num 
-# save the subset to a sparate file for later procesing
+# save the subset to a separate file for later processing
+
 library(data.table)
 library(sqldf)
 
-# define start date or end date
+# define start date or end date, you can mod the range of date here, and re-gen the dataset
 sdate <- as.Date("01/02/2007",format ="%d/%m/%Y")
 edate <- as.Date("02/02/2007",format ="%d/%m/%Y")
 

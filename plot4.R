@@ -1,3 +1,6 @@
+# Data has been cleaned by clean.R
+# See repo for what happened in the script :) 
+
 library(data.table)
 
 # read small Data set
